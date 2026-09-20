@@ -18,7 +18,7 @@ class RuleResolverTest {
     )
 
     @Test
-    fun specificEnabledRule_winsOverDefault() {
+    fun specificEnabledRule_isApplied() {
         val specific = rule("com.whatsapp", enabled = true, action = NotificationAction.BLOCK)
         val resolved = RuleResolver.resolve("com.whatsapp", mapOf(specific.packageName to specific), defaultRule)
         assertNotNull(resolved)
@@ -27,24 +27,15 @@ class RuleResolverTest {
     }
 
     @Test
-    fun specificDisabledRule_exemptsFromDefault() {
+    fun specificDisabledRule_isIgnored() {
         val specific = rule("com.whatsapp", enabled = false, action = NotificationAction.BLOCK)
         val resolved = RuleResolver.resolve("com.whatsapp", mapOf(specific.packageName to specific), defaultRule)
         assertNull(resolved)
     }
 
     @Test
-    fun missingRule_usesDefaultWhenEnabled() {
+    fun missingRule_doesNotUseDefault() {
         val resolved = RuleResolver.resolve("com.whatsapp", emptyMap(), defaultRule)
-        assertNotNull(resolved)
-        assertEquals(defaultRule.action, resolved!!.action)
-        assertEquals(defaultRule.quietStartMinutes, resolved.quietStartMinutes)
-        assertEquals(defaultRule.quietEndMinutes, resolved.quietEndMinutes)
-    }
-
-    @Test
-    fun missingRule_andDisabledDefault_returnsNull() {
-        val resolved = RuleResolver.resolve("com.whatsapp", emptyMap(), defaultRule.copy(enabled = false))
         assertNull(resolved)
     }
 

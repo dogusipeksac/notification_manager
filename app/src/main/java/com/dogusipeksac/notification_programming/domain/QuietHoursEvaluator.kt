@@ -78,7 +78,7 @@ object QuietHoursEvaluator {
         return "%02d:%02d".format(normalized / 60, normalized % 60)
     }
 
-    /** Cumartesi / Pazar — "Hafta sonu kapat" açıkken sessiz saat uygulanmaz. */
+    /** Cumartesi / Pazar — "Hafta sonu kapat" açıkken seçili uygulama bildirimleri engellenir. */
     fun isWeekend(calendar: Calendar = Calendar.getInstance()): Boolean {
         val day = calendar.get(Calendar.DAY_OF_WEEK)
         return day == Calendar.SATURDAY || day == Calendar.SUNDAY

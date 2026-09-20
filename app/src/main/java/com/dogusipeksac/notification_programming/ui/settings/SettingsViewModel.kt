@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dogusipeksac.notification_programming.data.local.DefaultRule
 import com.dogusipeksac.notification_programming.data.local.NotificationAction
-import com.dogusipeksac.notification_programming.data.local.ThemeMode
 import com.dogusipeksac.notification_programming.data.repository.NotificationRuleRepository
 import com.dogusipeksac.notification_programming.service.ListenerConnectionState
 import com.dogusipeksac.notification_programming.ui.permissions.PermissionSnapshot
@@ -19,7 +18,6 @@ import javax.inject.Inject
 
 data class SettingsUiState(
     val defaultRule: DefaultRule = DefaultRule(),
-    val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val weekendOff: Boolean = false,
     val permissions: PermissionSnapshot? = null
 )
@@ -34,14 +32,12 @@ class SettingsViewModel @Inject constructor(
 
     val uiState: StateFlow<SettingsUiState> = combine(
         ruleRepository.observeDefaultRule(),
-        ruleRepository.observeThemeMode(),
         ruleRepository.observeWeekendOff(),
         permissions,
         listenerConnectionState.connected
-    ) { defaultRule, themeMode, weekendOff, perms, connected ->
+    ) { defaultRule, weekendOff, perms, connected ->
         SettingsUiState(
             defaultRule = defaultRule,
-            themeMode = themeMode,
             weekendOff = weekendOff,
             permissions = perms?.copy(listenerConnected = connected)
         )
@@ -49,10 +45,6 @@ class SettingsViewModel @Inject constructor(
 
     fun onPermissionsRefreshed(snapshot: PermissionSnapshot) {
         permissions.value = snapshot
-    }
-
-    fun onThemeModeChange(mode: ThemeMode) {
-        viewModelScope.launch { ruleRepository.setThemeMode(mode) }
     }
 
     fun onWeekendOffChange(enabled: Boolean) {

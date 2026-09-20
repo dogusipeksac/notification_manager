@@ -8,6 +8,7 @@ object Routes {
     const val PRIVACY = "privacy"
     const val KVKK = "kvkk"
     const val TERMS = "terms"
+    const val ADD_APPS = "add_apps"
     const val APP_DETAIL = "app/{packageName}"
 
     const val ARG_PACKAGE_NAME = "packageName"

@@ -16,24 +16,23 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.HourglassEmpty
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Apps
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Weekend
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -43,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -57,7 +57,8 @@ import com.dogusipeksac.notification_programming.ui.theme.PurpleMid
 fun HomeScreen(
     viewModel: HomeViewModel,
     onOpenApp: (String) -> Unit,
-    onOpenSettings: () -> Unit
+    onOpenSettings: () -> Unit,
+    onAddApps: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -81,6 +82,15 @@ fun HomeScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onAddApps,
+                containerColor = PurpleMid,
+                contentColor = Color.White
+            ) {
+                Icon(Icons.Outlined.Add, contentDescription = stringResource(R.string.add_apps))
+            }
         }
     ) { inner ->
         Box(Modifier.fillMaxSize()) {
@@ -95,51 +105,44 @@ fun HomeScreen(
                     onToggle = viewModel::onWeekendOffChange,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
                 )
-                OutlinedTextField(
-                    value = state.query,
-                    onValueChange = viewModel::onQueryChange,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .height(56.dp),
-                    leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = null) },
-                    placeholder = { Text(stringResource(R.string.search_apps)) },
-                    singleLine = true,
-                    shape = MaterialTheme.shapes.large,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                        focusedBorderColor = Color.Transparent,
-                        unfocusedBorderColor = Color.Transparent
+                if (state.totalCount > 0) {
+                    OutlinedTextField(
+                        value = state.query,
+                        onValueChange = viewModel::onQueryChange,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .height(56.dp),
+                        leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = null) },
+                        placeholder = { Text(stringResource(R.string.search_apps)) },
+                        singleLine = true,
+                        shape = MaterialTheme.shapes.large,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            focusedBorderColor = Color.Transparent,
+                            unfocusedBorderColor = Color.Transparent
+                        )
                     )
-                )
-                PrimaryTabRow(
-                    selectedTabIndex = if (state.filter == AppListFilter.USER) 0 else 1,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                    containerColor = Color.Transparent
-                ) {
-                    Tab(
-                        selected = state.filter == AppListFilter.USER,
-                        onClick = { viewModel.onFilterChange(AppListFilter.USER) },
-                        text = { Text(stringResource(R.string.filter_user_apps)) }
-                    )
-                    Tab(
-                        selected = state.filter == AppListFilter.ALL,
-                        onClick = { viewModel.onFilterChange(AppListFilter.ALL) },
-                        text = { Text(stringResource(R.string.filter_all_apps)) }
+                    Text(
+                        text = stringResource(R.string.managed_app_count, state.totalCount),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
                     )
                 }
                 when {
-                    state.isLoading -> {
-                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            CircularProgressIndicator(color = PurpleMid)
-                        }
-                    }
-                    state.apps.isEmpty() -> EmptyAppsState()
+                    state.apps.isEmpty() && state.query.isBlank() -> EmptyManagedAppsState(onAddApps)
+                    state.apps.isEmpty() -> EmptySearchState()
                     else -> {
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 28.dp),
+                            contentPadding = PaddingValues(
+                                start = 16.dp,
+                                end = 16.dp,
+                                top = 4.dp,
+                                bottom = 88.dp
+                            ),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             items(state.apps, key = { it.packageName }) { row ->
@@ -244,7 +247,7 @@ private fun AppRowCard(
                     Spacer(Modifier.height(6.dp))
                     QuietHoursPill(
                         text = row.quietHoursLabel,
-                        badge = if (row.badge == RuleBadge.CUSTOM) RuleBadge.CUSTOM else RuleBadge.DEFAULT
+                        badge = RuleBadge.CUSTOM
                     )
                 } else if (!row.enabled) {
                     Spacer(Modifier.height(4.dp))
@@ -271,21 +274,46 @@ private fun AppRowCard(
 }
 
 @Composable
-private fun EmptyAppsState() {
+private fun EmptyManagedAppsState(onAddApps: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(32.dp),
+            .padding(32.dp)
+            .clickable(onClick = onAddApps),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Icon(
-            imageVector = Icons.Outlined.HourglassEmpty,
+            imageVector = Icons.Outlined.Apps,
             contentDescription = null,
             modifier = Modifier.size(48.dp),
             tint = MaterialTheme.colorScheme.primary
         )
         Spacer(Modifier.height(12.dp))
         Text(stringResource(R.string.no_apps), style = MaterialTheme.typography.titleMedium)
+        Spacer(Modifier.height(6.dp))
+        Text(
+            text = stringResource(R.string.no_apps_hint),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+        Spacer(Modifier.height(16.dp))
+        Text(
+            text = stringResource(R.string.add_apps),
+            style = MaterialTheme.typography.labelLarge,
+            color = PurpleMid
+        )
+    }
+}
+
+@Composable
+private fun EmptySearchState() {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(
+            text = stringResource(R.string.no_apps),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }

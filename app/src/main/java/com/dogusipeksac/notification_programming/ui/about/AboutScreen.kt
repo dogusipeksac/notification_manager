@@ -22,10 +22,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
-import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Gavel
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material.icons.outlined.PrivacyTip
 import androidx.compose.material3.Card
@@ -193,13 +193,13 @@ fun AboutScreen(
                             }
                         )
                         AboutLinkRow(
-                            icon = Icons.Outlined.Code,
-                            title = stringResource(R.string.contact_github),
+                            icon = Icons.Outlined.Language,
+                            title = stringResource(R.string.website_label),
                             trailingExternal = true,
                             onClick = {
                                 val intent = Intent(
                                     Intent.ACTION_VIEW,
-                                    Uri.parse(context.getString(R.string.github_url))
+                                    Uri.parse(context.getString(R.string.website_url))
                                 )
                                 runCatching { context.startActivity(intent) }
                             }

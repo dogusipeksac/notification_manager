@@ -4,27 +4,15 @@ import com.dogusipeksac.notification_programming.data.local.DefaultRule
 import com.dogusipeksac.notification_programming.data.local.NotificationRule
 
 /**
- * Uygulamaya özel kural yoksa varsayılan kurala düşer.
- * Özel kural `enabled = false` ise varsayılan uygulanmaz (bu uygulama muaf).
+ * Yalnızca kullanıcı tarafından eklenmiş (ve açık) uygulama kurallarını uygular.
+ * Varsayılan kural yalnızca yeni uygulama eklerken şablon olarak kullanılır.
  */
 object RuleResolver {
     fun resolve(
         packageName: String,
         rulesByPackage: Map<String, NotificationRule>,
-        defaultRule: DefaultRule
+        @Suppress("UNUSED_PARAMETER") defaultRule: DefaultRule
     ): NotificationRule? {
-        val specific = rulesByPackage[packageName]
-        if (specific != null) {
-            return specific.takeIf { it.enabled }
-        }
-        if (!defaultRule.enabled) return null
-        return NotificationRule(
-            packageName = packageName,
-            appName = "",
-            enabled = true,
-            quietStartMinutes = defaultRule.quietStartMinutes,
-            quietEndMinutes = defaultRule.quietEndMinutes,
-            action = defaultRule.action
-        )
+        return rulesByPackage[packageName]?.takeIf { it.enabled }
     }
 }

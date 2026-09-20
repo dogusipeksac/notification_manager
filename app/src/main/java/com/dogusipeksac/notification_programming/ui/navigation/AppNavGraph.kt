@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dogusipeksac.notification_programming.ui.about.AboutScreen
 import com.dogusipeksac.notification_programming.ui.about.LegalDocumentScreen
+import com.dogusipeksac.notification_programming.ui.addapps.AddAppsScreen
 import com.dogusipeksac.notification_programming.ui.appdetail.AppDetailScreen
 import com.dogusipeksac.notification_programming.ui.home.HomeScreen
 import com.dogusipeksac.notification_programming.ui.onboarding.OnboardingScreen
@@ -58,7 +59,14 @@ fun AppNavGraph() {
                 onOpenApp = { packageName ->
                     navController.navigate(Routes.appDetail(packageName))
                 },
-                onOpenSettings = { navController.navigate(Routes.SETTINGS) }
+                onOpenSettings = { navController.navigate(Routes.SETTINGS) },
+                onAddApps = { navController.navigate(Routes.ADD_APPS) }
+            )
+        }
+        composable(Routes.ADD_APPS) {
+            AddAppsScreen(
+                viewModel = hiltViewModel(),
+                onBack = { navController.popBackStack() }
             )
         }
         composable(
