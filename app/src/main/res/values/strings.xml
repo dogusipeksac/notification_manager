@@ -1,0 +1,73 @@
+<resources>
+    <string name="app_name">Bildirim Zamanlayıcı</string>
+    <string name="delayed_channel_name">Ertelenmiş bildirimler</string>
+    <string name="delayed_channel_description">Sessiz saat bitince gösterilen bildirimler</string>
+
+    <string name="onboarding_title">Bildirim erişimi gerekli</string>
+    <string name="onboarding_body">Diğer uygulamaların bildirimlerini sessiz saat kurallarına göre engellemek veya ertelemek için bildirim erişimi vermeniz gerekir. Bu izin sistem diyaloğu ile istenemez; Ayarlar ekranından bu uygulamayı açın.</string>
+    <string name="open_notification_access">Bildirim erişimini aç</string>
+    <string name="grant_post_notifications">Bildirim gönderme izni ver</string>
+    <string name="permission_granted">Bildirim erişimi verildi</string>
+    <string name="permission_not_granted">Bildirim erişimi henüz yok</string>
+
+    <string name="home_title">Uygulamalar</string>
+    <string name="home_hero_kicker">Bildirim Zamanlayıcı</string>
+    <string name="home_hero_title">Sessiz saatlerini sen kur</string>
+    <string name="home_hero_subtitle">Her uygulamaya özel başlangıç ve bitiş. Engelle veya erteleyip sabah göster.</string>
+    <string name="stat_active">%d aktif</string>
+    <string name="stat_custom">%d özel saat</string>
+    <string name="onboarding_step1_title">Bildirim erişimi</string>
+    <string name="onboarding_step1_body">Diğer uygulamaların bildirimlerini görmek için Ayarlar’dan izin ver.</string>
+    <string name="onboarding_step2_title">Uygulama başına saat</string>
+    <string name="onboarding_step2_body">WhatsApp’a 22:00, Instagram’a 00:00 gibi tamamen ayrı kurallar koy.</string>
+    <string name="settings">Ayarlar</string>
+    <string name="search_apps">Uygulama veya paket ara</string>
+    <string name="no_apps">Uygulama bulunamadı</string>
+    <string name="filter_user_apps">Uygulamalar</string>
+    <string name="filter_all_apps">Tüm paketler</string>
+    <string name="app_count">%1$d / %2$d uygulama</string>
+    <string name="hours_none">Saat yok — dokunarak ayarla</string>
+    <string name="hours_custom">%1$s · özel</string>
+    <string name="hours_default">%1$s · varsayılan</string>
+    <string name="customize_hours">Saati özelleştir</string>
+    <string name="badge_custom">Özel kural</string>
+    <string name="badge_default">Varsayılan</string>
+
+    <string name="app_rule">Uygulama kuralı</string>
+    <string name="back">Geri</string>
+    <string name="custom_rule_hint">Bu uygulamaya özel kural kullanılıyor.</string>
+    <string name="default_rule_hint">Henüz özel kural yok; kaydedince bu uygulama için ayrı kural oluşur. Kaydetmezseniz varsayılan kural uygulanır.</string>
+    <string name="per_app_hours_hint">Bu uygulamaya özel sessiz saat. Başlangıç ve bitişi değiştirince hemen kaydedilir; diğer uygulamaları etkilemez.</string>
+    <string name="start_label">Başlangıç</string>
+    <string name="end_label">Bitiş</string>
+    <string name="overnight_hint">Bitiş başlangıçtan küçük: aralık gece yarısını aşar (ör. 22:00–08:00).</string>
+    <string name="rule_enabled">Kural aktif</string>
+    <string name="quiet_hours">Sessiz saat</string>
+    <string name="start_time">Başlangıç: %1$s</string>
+    <string name="end_time">Bitiş: %1$s</string>
+    <string name="action">Aksiyon</string>
+    <string name="action_block">Engelle</string>
+    <string name="action_delay">Ertele ve göster</string>
+    <string name="action_block_desc">Sessiz saatlerde gelen bildirimler tamamen kaldırılır, saklanmaz.</string>
+    <string name="action_delay_desc">Sessiz saatlerde bildirim gizlenir; aralık bitince aynı içerikle yeniden gösterilir.</string>
+    <string name="save_rule">Kaydet</string>
+    <string name="reset_to_default">Varsayılana dön</string>
+    <string name="rule_saved">Kural kaydedildi</string>
+    <string name="rule_reset">Özel kural silindi</string>
+    <string name="ok">Tamam</string>
+    <string name="cancel">İptal</string>
+
+    <string name="default_rule_section">Varsayılan kural</string>
+    <string name="default_rule_section_hint">Özel kuralı olmayan uygulamalar için geçerlidir.</string>
+    <string name="default_rule_saved">Varsayılan kural kaydedildi</string>
+    <string name="permissions_section">İzinler ve servis</string>
+    <string name="perm_listener">Bildirim erişimi</string>
+    <string name="perm_listener_connected">Dinleyici servisi bağlı</string>
+    <string name="perm_post_notifications">Bildirim gönderme (POST_NOTIFICATIONS)</string>
+    <string name="perm_exact_alarm">Tam zamanlı alarm (exact alarm)</string>
+    <string name="perm_battery">Pil optimizasyonu istisnası</string>
+    <string name="fix">Düzelt</string>
+    <string name="rebind_listener">Yeniden bağla</string>
+    <string name="status_ok">Tamam</string>
+    <string name="status_missing">Eksik</string>
+</resources>
