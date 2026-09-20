@@ -27,7 +27,23 @@ class SettingsDataStore @Inject constructor(
 
     val defaultRule: Flow<DefaultRule> = dataStore.data.map { prefs -> prefs.toDefaultRule() }
 
+    val themeMode: Flow<ThemeMode> = dataStore.data.map { prefs ->
+        prefs[Keys.THEME]?.let { runCatching { ThemeMode.valueOf(it) }.getOrNull() }
+            ?: ThemeMode.SYSTEM
+    }
+
+    /** true = Cumartesi/Pazar sessiz saat kuralları uygulanmaz. */
+    val weekendOff: Flow<Boolean> = dataStore.data.map { prefs ->
+        prefs[Keys.WEEKEND_OFF] ?: false
+    }
+
     suspend fun getDefaultRule(): DefaultRule = dataStore.data.first().toDefaultRule()
+
+    suspend fun getWeekendOff(): Boolean = dataStore.data.first()[Keys.WEEKEND_OFF] ?: false
+
+    suspend fun getThemeMode(): ThemeMode =
+        dataStore.data.first()[Keys.THEME]?.let { runCatching { ThemeMode.valueOf(it) }.getOrNull() }
+            ?: ThemeMode.SYSTEM
 
     suspend fun saveDefaultRule(rule: DefaultRule) {
         dataStore.edit { prefs ->
@@ -36,6 +52,14 @@ class SettingsDataStore @Inject constructor(
             prefs[Keys.END] = rule.quietEndMinutes
             prefs[Keys.ACTION] = rule.action.name
         }
+    }
+
+    suspend fun setThemeMode(mode: ThemeMode) {
+        dataStore.edit { prefs -> prefs[Keys.THEME] = mode.name }
+    }
+
+    suspend fun setWeekendOff(enabled: Boolean) {
+        dataStore.edit { prefs -> prefs[Keys.WEEKEND_OFF] = enabled }
     }
 
     private fun Preferences.toDefaultRule(): DefaultRule {
@@ -54,5 +78,7 @@ class SettingsDataStore @Inject constructor(
         val START = intPreferencesKey("default_quiet_start")
         val END = intPreferencesKey("default_quiet_end")
         val ACTION = stringPreferencesKey("default_action")
+        val THEME = stringPreferencesKey("theme_mode")
+        val WEEKEND_OFF = booleanPreferencesKey("weekend_off")
     }
 }

@@ -56,6 +56,11 @@ class RuleEnforcingNotificationListener : NotificationListenerService() {
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         if (shouldIgnore(sbn)) return
 
+        // Hafta sonu kapat açıksa Cumartesi/Pazar kuralları uygulanmaz.
+        if (ruleCache.isWeekendOffEnabled() && QuietHoursEvaluator.isWeekend()) {
+            return
+        }
+
         val rule = ruleCache.resolve(sbn.packageName) ?: return
         val nowMinutes = QuietHoursEvaluator.currentMinutesOfDay(Calendar.getInstance())
         if (!QuietHoursEvaluator.isInQuietHours(nowMinutes, rule.quietStartMinutes, rule.quietEndMinutes)) {

@@ -36,6 +36,7 @@ data class HomeUiState(
     val query: String = "",
     val filter: AppListFilter = AppListFilter.USER,
     val isLoading: Boolean = true,
+    val weekendOff: Boolean = false,
     val apps: List<AppRowUi> = emptyList(),
     val visibleCount: Int = 0,
     val totalCount: Int = 0
@@ -64,8 +65,9 @@ class HomeViewModel @Inject constructor(
             HomeListQuery(q, apps, isLoading, f)
         },
         ruleRepository.observeRules(),
-        ruleRepository.observeDefaultRule()
-    ) { listQuery, rules, defaultRule ->
+        ruleRepository.observeDefaultRule(),
+        ruleRepository.observeWeekendOff()
+    ) { listQuery, rules, defaultRule, weekendOff ->
         val byPackage = rules.associateBy { it.packageName }
         val filteredInstalled = listQuery.apps.filter { app ->
             when (listQuery.filter) {
@@ -89,6 +91,7 @@ class HomeViewModel @Inject constructor(
             query = listQuery.query,
             filter = listQuery.filter,
             isLoading = listQuery.isLoading,
+            weekendOff = weekendOff,
             apps = rows,
             visibleCount = rows.size,
             totalCount = filteredInstalled.size
@@ -105,6 +108,10 @@ class HomeViewModel @Inject constructor(
 
     fun onFilterChange(value: AppListFilter) {
         filter.value = value
+    }
+
+    fun onWeekendOffChange(enabled: Boolean) {
+        viewModelScope.launch { ruleRepository.setWeekendOff(enabled) }
     }
 
     fun refreshApps() {

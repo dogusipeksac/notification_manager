@@ -76,9 +76,28 @@ class QuietHoursEvaluatorTest {
         assertEquals("23:59", QuietHoursEvaluator.formatMinutes(23 * 60 + 59))
     }
 
+    @Test
+    fun isWeekend_saturdayAndSundayOnly() {
+        // 2026-06-15 Monday
+        assertFalse(QuietHoursEvaluator.isWeekend(cal(hour = 12, minute = 0)))
+        // 2026-06-20 Saturday
+        assertTrue(QuietHoursEvaluator.isWeekend(dayCal(2026, Calendar.JUNE, 20)))
+        // 2026-06-21 Sunday
+        assertTrue(QuietHoursEvaluator.isWeekend(dayCal(2026, Calendar.JUNE, 21)))
+        // 2026-06-19 Friday
+        assertFalse(QuietHoursEvaluator.isWeekend(dayCal(2026, Calendar.JUNE, 19)))
+    }
+
     private fun cal(hour: Int, minute: Int): Calendar {
         return Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
             set(2026, Calendar.JUNE, 15, hour, minute, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+    }
+
+    private fun dayCal(year: Int, month: Int, day: Int): Calendar {
+        return Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
+            set(year, month, day, 12, 0, 0)
             set(Calendar.MILLISECOND, 0)
         }
     }

@@ -27,11 +27,15 @@ class RuleCache @Inject constructor(
     @Volatile
     private var defaultRule: DefaultRule = DefaultRule()
 
+    @Volatile
+    private var weekendOff: Boolean = false
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     suspend fun loadNow() {
         rulesByPackage = repository.getAllRules().associateBy { it.packageName }
         defaultRule = repository.getDefaultRule()
+        weekendOff = repository.getWeekendOff()
     }
 
     fun startObserving() {
@@ -41,7 +45,12 @@ class RuleCache @Inject constructor(
         repository.observeDefaultRule()
             .onEach { defaultRule = it }
             .launchIn(scope)
+        repository.observeWeekendOff()
+            .onEach { weekendOff = it }
+            .launchIn(scope)
     }
+
+    fun isWeekendOffEnabled(): Boolean = weekendOff
 
     fun resolve(packageName: String): NotificationRule? {
         return RuleResolver.resolve(packageName, rulesByPackage, defaultRule)

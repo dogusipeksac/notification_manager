@@ -2,6 +2,7 @@ package com.dogusipeksac.notification_programming.data.repository
 
 import com.dogusipeksac.notification_programming.data.local.DefaultRule
 import com.dogusipeksac.notification_programming.data.local.NotificationRule
+import com.dogusipeksac.notification_programming.data.local.ThemeMode
 import com.dogusipeksac.notification_programming.data.local.NotificationRuleDao
 import com.dogusipeksac.notification_programming.data.local.SettingsDataStore
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +18,10 @@ class NotificationRuleRepository @Inject constructor(
 
     fun observeDefaultRule(): Flow<DefaultRule> = settingsDataStore.defaultRule
 
+    fun observeThemeMode(): Flow<ThemeMode> = settingsDataStore.themeMode
+
+    fun observeWeekendOff(): Flow<Boolean> = settingsDataStore.weekendOff
+
     fun observeRule(packageName: String): Flow<NotificationRule?> = dao.observeByPackage(packageName)
 
     suspend fun getAllRules(): List<NotificationRule> = dao.getAll()
@@ -25,9 +30,15 @@ class NotificationRuleRepository @Inject constructor(
 
     suspend fun getDefaultRule(): DefaultRule = settingsDataStore.getDefaultRule()
 
+    suspend fun getWeekendOff(): Boolean = settingsDataStore.getWeekendOff()
+
     suspend fun upsertRule(rule: NotificationRule) = dao.upsert(rule)
 
     suspend fun deleteRule(packageName: String) = dao.delete(packageName)
 
     suspend fun saveDefaultRule(rule: DefaultRule) = settingsDataStore.saveDefaultRule(rule)
+
+    suspend fun setThemeMode(mode: ThemeMode) = settingsDataStore.setThemeMode(mode)
+
+    suspend fun setWeekendOff(enabled: Boolean) = settingsDataStore.setWeekendOff(enabled)
 }

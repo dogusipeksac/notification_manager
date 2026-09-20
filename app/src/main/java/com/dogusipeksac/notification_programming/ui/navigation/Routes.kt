@@ -4,6 +4,10 @@ object Routes {
     const val ONBOARDING = "onboarding"
     const val HOME = "home"
     const val SETTINGS = "settings"
+    const val ABOUT = "about"
+    const val PRIVACY = "privacy"
+    const val KVKK = "kvkk"
+    const val TERMS = "terms"
     const val APP_DETAIL = "app/{packageName}"
 
     const val ARG_PACKAGE_NAME = "packageName"
