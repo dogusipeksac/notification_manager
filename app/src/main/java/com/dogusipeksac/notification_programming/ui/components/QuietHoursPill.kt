@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.HourglassEmpty
+import androidx.compose.material.icons.outlined.NotificationsOff
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -15,7 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dogusipeksac.notification_programming.ui.home.RuleBadge
+import com.dogusipeksac.notification_programming.ui.theme.OrangeAccent
 
+/**
+ * Zaman rozeti: aktif özel kuralda primary container;
+ * "yeniden gösterilecek" vurgusu için turuncu yalnızca CUSTOM'da ikon aksanı.
+ */
 @Composable
 fun QuietHoursPill(
     text: String,
@@ -23,30 +30,34 @@ fun QuietHoursPill(
     modifier: Modifier = Modifier
 ) {
     val container = when (badge) {
-        RuleBadge.CUSTOM -> MaterialTheme.colorScheme.secondaryContainer
-        RuleBadge.DEFAULT -> MaterialTheme.colorScheme.primaryContainer
+        RuleBadge.CUSTOM, RuleBadge.DEFAULT -> MaterialTheme.colorScheme.primaryContainer
         RuleBadge.NONE -> MaterialTheme.colorScheme.surfaceContainerHigh
     }
     val content = when (badge) {
-        RuleBadge.CUSTOM -> MaterialTheme.colorScheme.onSecondaryContainer
-        RuleBadge.DEFAULT -> MaterialTheme.colorScheme.onPrimaryContainer
+        RuleBadge.CUSTOM, RuleBadge.DEFAULT -> MaterialTheme.colorScheme.onPrimaryContainer
         RuleBadge.NONE -> MaterialTheme.colorScheme.onSurfaceVariant
     }
+    val icon = when (badge) {
+        RuleBadge.CUSTOM -> Icons.Outlined.HourglassEmpty
+        RuleBadge.DEFAULT -> Icons.Outlined.Schedule
+        RuleBadge.NONE -> Icons.Outlined.NotificationsOff
+    }
+    val iconTint = if (badge == RuleBadge.CUSTOM) OrangeAccent else content
     Surface(
         modifier = modifier,
         shape = MaterialTheme.shapes.extraSmall,
         color = container
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Icon(
-                imageVector = Icons.Outlined.Schedule,
+                imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier.size(14.dp),
-                tint = content
+                tint = iconTint
             )
             Text(
                 text = text,

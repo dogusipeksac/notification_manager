@@ -8,6 +8,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
@@ -19,15 +20,22 @@ private val DarkColorScheme = darkColorScheme(
     onSecondary = DarkOnSecondary,
     secondaryContainer = DarkSecondaryContainer,
     onSecondaryContainer = DarkOnSecondaryContainer,
-    tertiary = DarkPrimary,
+    tertiary = OrangeAccent,
+    onTertiary = Color.White,
+    tertiaryContainer = WarningContainerDark,
+    onTertiaryContainer = OrangeLight,
     background = DarkBackground,
     surface = DarkSurface,
+    surfaceContainerLowest = DarkBackground,
+    surfaceContainerLow = DarkSurface,
     surfaceContainer = DarkSurfaceContainer,
     surfaceContainerHigh = DarkSurfaceHigh,
+    surfaceContainerHighest = DarkSurfaceHigh,
     onBackground = DarkOnSurface,
     onSurface = DarkOnSurface,
     onSurfaceVariant = DarkOnSurfaceVariant,
-    outline = DarkOutline
+    outline = DarkOutline,
+    outlineVariant = DarkOutline.copy(alpha = 0.5f)
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -39,7 +47,10 @@ private val LightColorScheme = lightColorScheme(
     onSecondary = LightOnSecondary,
     secondaryContainer = LightSecondaryContainer,
     onSecondaryContainer = LightOnSecondaryContainer,
-    tertiary = BrandPurpleDark,
+    tertiary = OrangeAccent,
+    onTertiary = Color.White,
+    tertiaryContainer = WarningContainerLight,
+    onTertiaryContainer = Color(0xFF5C2800),
     background = LightBackground,
     surface = LightSurface,
     surfaceContainer = LightSurfaceContainer,
@@ -53,6 +64,7 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun Notification_programmingTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    /** Marka hue'larını korumak için varsayılan kapalı; isteğe bağlı Material You. */
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {

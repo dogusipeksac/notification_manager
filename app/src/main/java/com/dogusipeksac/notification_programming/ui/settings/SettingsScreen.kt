@@ -4,6 +4,7 @@ import android.Manifest
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,8 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.ErrorOutline
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,8 +27,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -48,9 +48,11 @@ import com.dogusipeksac.notification_programming.R
 import com.dogusipeksac.notification_programming.domain.QuietHoursEvaluator
 import com.dogusipeksac.notification_programming.ui.components.ActionSegmentedButtons
 import com.dogusipeksac.notification_programming.ui.components.BrandAtmosphere
+import com.dogusipeksac.notification_programming.ui.components.CircularTimeSelector
+import com.dogusipeksac.notification_programming.ui.components.PermissionStatusBadge
 import com.dogusipeksac.notification_programming.ui.components.QuietTimePickerDialog
-import com.dogusipeksac.notification_programming.ui.components.TimeSelectCard
 import com.dogusipeksac.notification_programming.ui.permissions.PermissionChecker
+import com.dogusipeksac.notification_programming.ui.theme.PurpleMid
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,6 +64,7 @@ fun SettingsScreen(
     val context = LocalContext.current
     var pickingStart by remember { mutableStateOf(false) }
     var pickingEnd by remember { mutableStateOf(false) }
+    var editingDefault by remember { mutableStateOf(false) }
 
     val postPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -88,7 +91,10 @@ fun SettingsScreen(
                 title = { Text(stringResource(R.string.settings)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = stringResource(R.string.back))
+                        Icon(
+                            Icons.AutoMirrored.Outlined.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
@@ -104,88 +110,108 @@ fun SettingsScreen(
                     .padding(horizontal = 16.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                Text(stringResource(R.string.default_rule_section), style = MaterialTheme.typography.titleMedium)
-                Spacer(Modifier.height(6.dp))
                 Text(
-                    text = stringResource(R.string.default_rule_section_hint),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    stringResource(R.string.default_rule_section),
+                    style = MaterialTheme.typography.titleMedium
                 )
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(10.dp))
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    shape = MaterialTheme.shapes.large
-                ) {
-                    Row(
-                        modifier = Modifier.padding(18.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(stringResource(R.string.rule_enabled), modifier = Modifier.weight(1f), style = MaterialTheme.typography.titleMedium)
-                        Switch(
-                            checked = defaultRule.enabled,
-                            onCheckedChange = viewModel::onDefaultEnabledChange
-                        )
-                    }
-                }
-                Spacer(Modifier.height(12.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    TimeSelectCard(
-                        title = stringResource(R.string.start_label),
-                        time = QuietHoursEvaluator.formatMinutes(defaultRule.quietStartMinutes),
-                        onClick = { pickingStart = true },
-                        modifier = Modifier.weight(1f)
-                    )
-                    TimeSelectCard(
-                        title = stringResource(R.string.end_label),
-                        time = QuietHoursEvaluator.formatMinutes(defaultRule.quietEndMinutes),
-                        onClick = { pickingEnd = true },
-                        modifier = Modifier.weight(1f),
-                        accentSecondary = true
-                    )
-                }
-                Spacer(Modifier.height(12.dp))
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
                     shape = MaterialTheme.shapes.large
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        ActionSegmentedButtons(
-                            selected = defaultRule.action,
-                            onSelected = viewModel::onDefaultActionChange
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    stringResource(R.string.default_rule_section),
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+                                Spacer(Modifier.height(4.dp))
+                                Text(
+                                    text = if (defaultRule.enabled) {
+                                        stringResource(
+                                            R.string.default_hours_summary,
+                                            QuietHoursEvaluator.formatMinutes(defaultRule.quietStartMinutes),
+                                            QuietHoursEvaluator.formatMinutes(defaultRule.quietEndMinutes)
+                                        )
+                                    } else {
+                                        stringResource(R.string.default_rule_section_hint)
+                                    },
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            IconButton(onClick = { editingDefault = !editingDefault }) {
+                                Icon(
+                                    Icons.Outlined.Edit,
+                                    contentDescription = stringResource(R.string.edit_default_rule)
+                                )
+                            }
+                            Switch(
+                                checked = defaultRule.enabled,
+                                onCheckedChange = viewModel::onDefaultEnabledChange,
+                                colors = SwitchDefaults.colors(
+                                    checkedTrackColor = PurpleMid,
+                                    checkedThumbColor = Color.White
+                                )
+                            )
+                        }
+                        if (editingDefault) {
+                            Spacer(Modifier.height(12.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceEvenly
+                            ) {
+                                CircularTimeSelector(
+                                    title = stringResource(R.string.start_label),
+                                    time = QuietHoursEvaluator.formatMinutes(defaultRule.quietStartMinutes),
+                                    minutesOfDay = defaultRule.quietStartMinutes,
+                                    onClick = { pickingStart = true },
+                                    modifier = Modifier.weight(1f)
+                                )
+                                CircularTimeSelector(
+                                    title = stringResource(R.string.end_label),
+                                    time = QuietHoursEvaluator.formatMinutes(defaultRule.quietEndMinutes),
+                                    minutesOfDay = defaultRule.quietEndMinutes,
+                                    onClick = { pickingEnd = true },
+                                    modifier = Modifier.weight(1f),
+                                    accentSecondary = true
+                                )
+                            }
+                            Spacer(Modifier.height(12.dp))
+                            ActionSegmentedButtons(
+                                selected = defaultRule.action,
+                                onSelected = viewModel::onDefaultActionChange
+                            )
+                        }
                     }
                 }
                 Spacer(Modifier.height(24.dp))
-                Text(stringResource(R.string.permissions_section), style = MaterialTheme.typography.titleMedium)
-                Spacer(Modifier.height(12.dp))
+                Text(
+                    stringResource(R.string.permissions_section),
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(Modifier.height(10.dp))
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
                     shape = MaterialTheme.shapes.large
                 ) {
-                    Column(modifier = Modifier.padding(vertical = 6.dp)) {
+                    Column(modifier = Modifier.padding(vertical = 4.dp)) {
                         PermissionRow(
                             title = stringResource(R.string.perm_listener),
                             granted = perms?.notificationListenerGranted == true,
-                            onFix = {
+                            onClick = {
                                 context.startActivity(PermissionChecker.notificationListenerSettingsIntent())
                             }
                         )
                         PermissionRow(
-                            title = stringResource(R.string.perm_listener_connected),
-                            granted = perms?.listenerConnected == true,
-                            fixLabel = stringResource(R.string.rebind_listener),
-                            onFix = { PermissionChecker.requestRebind(context) }
-                        )
-                        PermissionRow(
                             title = stringResource(R.string.perm_post_notifications),
                             granted = perms?.postNotificationsGranted == true,
-                            onFix = {
+                            onClick = {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                     postPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                                 }
@@ -194,14 +220,14 @@ fun SettingsScreen(
                         PermissionRow(
                             title = stringResource(R.string.perm_exact_alarm),
                             granted = perms?.exactAlarmGranted == true,
-                            onFix = {
+                            onClick = {
                                 context.startActivity(PermissionChecker.exactAlarmSettingsIntent(context))
                             }
                         )
                         PermissionRow(
                             title = stringResource(R.string.perm_battery),
                             granted = perms?.batteryOptimizationIgnored == true,
-                            onFix = {
+                            onClick = {
                                 context.startActivity(PermissionChecker.ignoreBatteryOptimizationsIntent(context))
                             }
                         )
@@ -240,36 +266,20 @@ fun SettingsScreen(
 private fun PermissionRow(
     title: String,
     granted: Boolean,
-    fixLabel: String = stringResource(R.string.fix),
-    onFix: () -> Unit
+    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 10.dp),
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            imageVector = if (granted) Icons.Outlined.CheckCircle else Icons.Outlined.ErrorOutline,
-            contentDescription = null,
-            tint = if (granted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+        Text(
+            title,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f)
         )
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 12.dp)
-        ) {
-            Text(title, style = MaterialTheme.typography.bodyMedium)
-            Text(
-                text = stringResource(if (granted) R.string.status_ok else R.string.status_missing),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-        if (!granted) {
-            TextButton(onClick = onFix) {
-                Text(fixLabel)
-            }
-        }
+        PermissionStatusBadge(granted = granted)
     }
 }

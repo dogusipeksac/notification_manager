@@ -6,6 +6,7 @@ import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Snooze
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.dogusipeksac.notification_programming.R
 import com.dogusipeksac.notification_programming.data.local.NotificationAction
+import com.dogusipeksac.notification_programming.ui.theme.PurpleMid
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,10 +28,17 @@ fun ActionSegmentedButtons(
     val actions = NotificationAction.entries
     SingleChoiceSegmentedButtonRow(modifier = modifier.fillMaxWidth()) {
         actions.forEachIndexed { index, action ->
+            val isSelected = selected == action
             SegmentedButton(
-                selected = selected == action,
+                selected = isSelected,
                 onClick = { onSelected(action) },
                 shape = SegmentedButtonDefaults.itemShape(index, actions.size),
+                colors = SegmentedButtonDefaults.colors(
+                    activeContainerColor = PurpleMid,
+                    activeContentColor = MaterialTheme.colorScheme.onPrimary,
+                    inactiveContainerColor = MaterialTheme.colorScheme.surface,
+                    inactiveContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                ),
                 icon = {
                     Icon(
                         imageVector = when (action) {

@@ -1,12 +1,18 @@
 package com.dogusipeksac.notification_programming.ui.components
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.dogusipeksac.notification_programming.R
 
@@ -36,6 +42,17 @@ fun QuietTimePickerDialog(
                 Text(stringResource(R.string.cancel))
             }
         },
-        text = { TimePicker(state = state) }
+        text = {
+            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                TimePicker(
+                    state = state,
+                    colors = TimePickerDefaults.colors(
+                        clockDialColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        selectorColor = MaterialTheme.colorScheme.secondary,
+                        periodSelectorSelectedContainerColor = MaterialTheme.colorScheme.secondaryContainer
+                    )
+                )
+            }
+        }
     )
 }

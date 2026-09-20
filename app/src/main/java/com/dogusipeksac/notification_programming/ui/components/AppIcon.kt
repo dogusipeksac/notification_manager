@@ -5,7 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +24,7 @@ import androidx.core.graphics.drawable.toBitmap
 fun AppIcon(
     packageName: String,
     modifier: Modifier = Modifier,
-    size: Dp = 48.dp,
+    size: Dp = 40.dp,
     fallbackLabel: String = ""
 ) {
     val context = LocalContext.current
@@ -35,27 +35,26 @@ fun AppIcon(
             bmp.asImageBitmap()
         }.getOrNull()
     }
-    val shape = RoundedCornerShape(size * 0.28f)
     if (bitmap != null) {
         Image(
             bitmap = bitmap,
             contentDescription = null,
             modifier = modifier
                 .size(size)
-                .clip(shape)
+                .clip(CircleShape)
         )
     } else {
         Box(
             modifier = modifier
                 .size(size)
-                .clip(shape)
+                .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primaryContainer),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = fallbackLabel.firstOrNull()?.uppercase() ?: "?",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }

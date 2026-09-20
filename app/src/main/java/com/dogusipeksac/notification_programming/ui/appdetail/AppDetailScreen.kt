@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -38,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dogusipeksac.notification_programming.R
@@ -46,8 +48,9 @@ import com.dogusipeksac.notification_programming.domain.QuietHoursEvaluator
 import com.dogusipeksac.notification_programming.ui.components.ActionSegmentedButtons
 import com.dogusipeksac.notification_programming.ui.components.AppIcon
 import com.dogusipeksac.notification_programming.ui.components.BrandAtmosphere
+import com.dogusipeksac.notification_programming.ui.components.CircularTimeSelector
 import com.dogusipeksac.notification_programming.ui.components.QuietTimePickerDialog
-import com.dogusipeksac.notification_programming.ui.components.TimeSelectCard
+import com.dogusipeksac.notification_programming.ui.theme.PurpleMid
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,8 +76,11 @@ fun AppDetailScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.app_rule)) },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = stringResource(R.string.back))
+                    IconButton(onClick = onBack, modifier = Modifier.padding(4.dp)) {
+                        Icon(
+                            Icons.AutoMirrored.Outlined.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
@@ -89,70 +95,44 @@ fun AppDetailScreen(
                     .fillMaxSize()
                     .padding(inner)
                     .padding(horizontal = 16.dp)
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    shape = MaterialTheme.shapes.large
-                ) {
-                    Row(
-                        modifier = Modifier.padding(18.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        AppIcon(
-                            packageName = state.packageName,
-                            fallbackLabel = state.appName,
-                            size = 64.dp
-                        )
-                        Spacer(Modifier.padding(10.dp))
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(state.appName, style = MaterialTheme.typography.titleLarge)
-                            Text(
-                                state.packageName,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-                Spacer(Modifier.height(14.dp))
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    shape = MaterialTheme.shapes.large
-                ) {
-                    Row(
-                        modifier = Modifier.padding(18.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(stringResource(R.string.rule_enabled), style = MaterialTheme.typography.titleMedium)
-                            Text(
-                                stringResource(R.string.per_app_hours_hint),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        Switch(checked = state.enabled, onCheckedChange = viewModel::onEnabledChange)
-                    }
-                }
-                Spacer(Modifier.height(14.dp))
-                Text(stringResource(R.string.quiet_hours), style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
+                AppIcon(
+                    packageName = state.packageName,
+                    fallbackLabel = state.appName,
+                    size = 88.dp
+                )
+                Spacer(Modifier.height(14.dp))
+                Text(
+                    state.appName,
+                    style = MaterialTheme.typography.headlineSmall,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(Modifier.height(24.dp))
+                Text(
+                    stringResource(R.string.quiet_hours),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(12.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    TimeSelectCard(
+                    CircularTimeSelector(
                         title = stringResource(R.string.start_label),
                         time = QuietHoursEvaluator.formatMinutes(state.startMinutes),
+                        minutesOfDay = state.startMinutes,
                         onClick = { pickingStart = true },
                         modifier = Modifier.weight(1f)
                     )
-                    TimeSelectCard(
+                    CircularTimeSelector(
                         title = stringResource(R.string.end_label),
                         time = QuietHoursEvaluator.formatMinutes(state.endMinutes),
+                        minutesOfDay = state.endMinutes,
                         onClick = { pickingEnd = true },
                         modifier = Modifier.weight(1f),
                         accentSecondary = true
@@ -163,33 +143,53 @@ fun AppDetailScreen(
                         text = stringResource(R.string.overnight_hint),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.padding(top = 10.dp)
+                        modifier = Modifier.padding(top = 10.dp),
+                        textAlign = TextAlign.Center
                     )
                 }
-                Spacer(Modifier.height(18.dp))
-                Text(stringResource(R.string.action), style = MaterialTheme.typography.titleMedium)
+                Spacer(Modifier.height(24.dp))
+                ActionSegmentedButtons(
+                    selected = state.action,
+                    onSelected = viewModel::onActionChange
+                )
                 Spacer(Modifier.height(8.dp))
+                Text(
+                    text = stringResource(
+                        if (state.action == NotificationAction.BLOCK) {
+                            R.string.action_block_desc
+                        } else {
+                            R.string.action_delay_desc
+                        }
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+                Spacer(Modifier.height(20.dp))
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
                     shape = MaterialTheme.shapes.large
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        ActionSegmentedButtons(
-                            selected = state.action,
-                            onSelected = viewModel::onActionChange
-                        )
-                        Spacer(Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.padding(horizontal = 18.dp, vertical = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
-                            text = stringResource(
-                                if (state.action == NotificationAction.BLOCK) {
-                                    R.string.action_block_desc
-                                } else {
-                                    R.string.action_delay_desc
-                                }
-                            ),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            text = stringResource(R.string.rule_active_for_app),
+                            style = MaterialTheme.typography.titleSmall,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Switch(
+                            checked = state.enabled,
+                            onCheckedChange = viewModel::onEnabledChange,
+                            colors = SwitchDefaults.colors(
+                                checkedTrackColor = PurpleMid,
+                                checkedThumbColor = Color.White,
+                                checkedBorderColor = Color.Transparent
+                            )
                         )
                     }
                 }
