@@ -6,10 +6,29 @@
     <string name="onboarding_title">Kontrol sende</string>
     <string name="onboarding_body">Kaotik bildirim akışını sakinleştir.</string>
     <string name="open_notification_access">Bildirim erişimi ver</string>
-    <string name="onboarding_settings_hint">Dokununca sistem Ayarları açılır; bu uygulamayı listeden etkinleştir.</string>
+    <string name="onboarding_settings_hint">Sistem ayarlarında bu uygulamayı listeden etkinleştir.</string>
     <string name="grant_post_notifications">Bildirim gönderme izni ver</string>
     <string name="permission_granted">Bildirim erişimi verildi</string>
     <string name="permission_not_granted">Bildirim erişimi henüz yok</string>
+    <string name="onboarding_next">Devam</string>
+    <string name="onboarding_skip">Atla</string>
+    <string name="onboarding_start">Başla</string>
+    <string name="onboarding_continue_home">Uygulamaya geç</string>
+
+    <string name="onboarding_page1_title">Bildirimlerini sen yönet</string>
+    <string name="onboarding_page1_body">Bildirim Zamanlayıcı, seçtiğin uygulamaların bildirimlerini sessiz saatlerde engeller veya erteler. Odaklanmak istediğin zamanlarda kesinti olmaz.</string>
+
+    <string name="onboarding_page2_title">İstediğin uygulamaları seç</string>
+    <string name="onboarding_page2_body">Ana ekranda her şeyi bir anda görmezsin. + ile yalnızca yönetmek istediğin uygulamaları listeye eklersin.</string>
+
+    <string name="onboarding_page3_title">Sessiz saat koy</string>
+    <string name="onboarding_page3_body">Her uygulama için başlangıç ve bitiş saati belirle. İstersen bildirimi tamamen engelle, istersen sessiz saat bitince aynı içerikle geri getir.</string>
+
+    <string name="onboarding_page4_title">Hafta sonu kapat</string>
+    <string name="onboarding_page4_body">İstersen Cumartesi ve Pazar seçili uygulamaların bildirimlerini tamamen kapat. Hafta içi kuralların aynı kalır.</string>
+
+    <string name="onboarding_page5_title">Son adım: izin ver</string>
+    <string name="onboarding_page5_body">Bildirimleri yönetebilmek için sistemden bildirim erişimi gerekir. Ayarlar açılınca Bildirim Zamanlayıcıyı etkinleştir.</string>
 
     <string name="onboarding_step1_title">Sessiz saatler tanımla</string>
     <string name="onboarding_step1_body">İstediğin uygulamaya gece aralığı koy; bildirimler o saatte durur.</string>

@@ -32,14 +32,20 @@ class SettingsDataStore @Inject constructor(
             ?: ThemeMode.SYSTEM
     }
 
-    /** true = Cumartesi/Pazar sessiz saat kuralları uygulanmaz. */
+    /** true = Cumartesi/Pazar seçili uygulama bildirimleri engellenir. */
     val weekendOff: Flow<Boolean> = dataStore.data.map { prefs ->
         prefs[Keys.WEEKEND_OFF] ?: false
+    }
+
+    val hasSeenIntro: Flow<Boolean> = dataStore.data.map { prefs ->
+        prefs[Keys.HAS_SEEN_INTRO] ?: false
     }
 
     suspend fun getDefaultRule(): DefaultRule = dataStore.data.first().toDefaultRule()
 
     suspend fun getWeekendOff(): Boolean = dataStore.data.first()[Keys.WEEKEND_OFF] ?: false
+
+    suspend fun getHasSeenIntro(): Boolean = dataStore.data.first()[Keys.HAS_SEEN_INTRO] ?: false
 
     suspend fun getThemeMode(): ThemeMode =
         dataStore.data.first()[Keys.THEME]?.let { runCatching { ThemeMode.valueOf(it) }.getOrNull() }
@@ -62,6 +68,10 @@ class SettingsDataStore @Inject constructor(
         dataStore.edit { prefs -> prefs[Keys.WEEKEND_OFF] = enabled }
     }
 
+    suspend fun setHasSeenIntro(seen: Boolean) {
+        dataStore.edit { prefs -> prefs[Keys.HAS_SEEN_INTRO] = seen }
+    }
+
     private fun Preferences.toDefaultRule(): DefaultRule {
         val fallback = DefaultRule()
         return DefaultRule(
@@ -80,5 +90,6 @@ class SettingsDataStore @Inject constructor(
         val ACTION = stringPreferencesKey("default_action")
         val THEME = stringPreferencesKey("theme_mode")
         val WEEKEND_OFF = booleanPreferencesKey("weekend_off")
+        val HAS_SEEN_INTRO = booleanPreferencesKey("has_seen_intro")
     }
 }

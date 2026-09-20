@@ -1,12 +1,18 @@
 package com.dogusipeksac.notification_programming.ui.navigation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.navigation.NavType
@@ -14,6 +20,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.dogusipeksac.notification_programming.R
+import com.dogusipeksac.notification_programming.data.local.SettingsDataStore
 import com.dogusipeksac.notification_programming.ui.about.AboutScreen
 import com.dogusipeksac.notification_programming.ui.about.LegalDocumentScreen
 import com.dogusipeksac.notification_programming.ui.addapps.AddAppsScreen
@@ -22,22 +30,51 @@ import com.dogusipeksac.notification_programming.ui.home.HomeScreen
 import com.dogusipeksac.notification_programming.ui.onboarding.OnboardingScreen
 import com.dogusipeksac.notification_programming.ui.permissions.PermissionChecker
 import com.dogusipeksac.notification_programming.ui.settings.SettingsScreen
-import com.dogusipeksac.notification_programming.R
-import androidx.compose.ui.res.stringResource
+import com.dogusipeksac.notification_programming.ui.theme.PurpleMid
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
+
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface SettingsEntryPoint {
+    fun settingsDataStore(): SettingsDataStore
+}
 
 @Composable
 fun AppNavGraph() {
     val context = LocalContext.current
+    val settings = remember {
+        EntryPointAccessors.fromApplication(context, SettingsEntryPoint::class.java)
+            .settingsDataStore()
+    }
+    var introReady by remember { mutableStateOf(false) }
+    var hasSeenIntro by remember { mutableStateOf(false) }
     var listenerGranted by remember {
         mutableStateOf(PermissionChecker.isNotificationListenerGranted(context))
     }
+
+    LaunchedEffect(Unit) {
+        hasSeenIntro = settings.getHasSeenIntro()
+        introReady = true
+    }
+
     LifecycleResumeEffect(Unit) {
         listenerGranted = PermissionChecker.isNotificationListenerGranted(context)
         onPauseOrDispose { }
     }
 
+    if (!introReady) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(color = PurpleMid)
+        }
+        return
+    }
+
+    val needsOnboarding = !hasSeenIntro || !listenerGranted
     val navController = rememberNavController()
-    val startDestination = if (listenerGranted) Routes.HOME else Routes.ONBOARDING
+    val startDestination = if (needsOnboarding) Routes.ONBOARDING else Routes.HOME
 
     NavHost(
         navController = navController,
@@ -45,7 +82,9 @@ fun AppNavGraph() {
     ) {
         composable(Routes.ONBOARDING) {
             OnboardingScreen(
+                viewModel = hiltViewModel(),
                 onFinished = {
+                    hasSeenIntro = true
                     navController.navigate(Routes.HOME) {
                         popUpTo(Routes.ONBOARDING) { inclusive = true }
                         launchSingleTop = true

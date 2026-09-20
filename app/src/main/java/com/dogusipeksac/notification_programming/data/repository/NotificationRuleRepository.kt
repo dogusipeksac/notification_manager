@@ -22,6 +22,8 @@ class NotificationRuleRepository @Inject constructor(
 
     fun observeWeekendOff(): Flow<Boolean> = settingsDataStore.weekendOff
 
+    fun observeHasSeenIntro(): Flow<Boolean> = settingsDataStore.hasSeenIntro
+
     fun observeRule(packageName: String): Flow<NotificationRule?> = dao.observeByPackage(packageName)
 
     suspend fun getAllRules(): List<NotificationRule> = dao.getAll()
@@ -41,4 +43,8 @@ class NotificationRuleRepository @Inject constructor(
     suspend fun setThemeMode(mode: ThemeMode) = settingsDataStore.setThemeMode(mode)
 
     suspend fun setWeekendOff(enabled: Boolean) = settingsDataStore.setWeekendOff(enabled)
+
+    suspend fun setHasSeenIntro(seen: Boolean) = settingsDataStore.setHasSeenIntro(seen)
+
+    suspend fun getHasSeenIntro(): Boolean = settingsDataStore.getHasSeenIntro()
 }
