@@ -19,6 +19,7 @@ data class PermissionSnapshot(
     val postNotificationsGranted: Boolean,
     val exactAlarmGranted: Boolean,
     val batteryOptimizationIgnored: Boolean,
+    val usageAccessGranted: Boolean,
     val listenerConnected: Boolean
 )
 
@@ -30,6 +31,7 @@ object PermissionChecker {
             postNotificationsGranted = isPostNotificationsGranted(context),
             exactAlarmGranted = isExactAlarmGranted(context),
             batteryOptimizationIgnored = isIgnoringBatteryOptimizations(context),
+            usageAccessGranted = isUsageAccessGranted(context),
             listenerConnected = listenerConnected
         )
     }
@@ -58,8 +60,31 @@ object PermissionChecker {
         return pm.isIgnoringBatteryOptimizations(context.packageName)
     }
 
+    fun isUsageAccessGranted(context: Context): Boolean {
+        val appOps = context.getSystemService(android.app.AppOpsManager::class.java) ?: return false
+        val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            appOps.unsafeCheckOpNoThrow(
+                android.app.AppOpsManager.OPSTR_GET_USAGE_STATS,
+                android.os.Process.myUid(),
+                context.packageName
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            appOps.checkOpNoThrow(
+                android.app.AppOpsManager.OPSTR_GET_USAGE_STATS,
+                android.os.Process.myUid(),
+                context.packageName
+            )
+        }
+        return mode == android.app.AppOpsManager.MODE_ALLOWED
+    }
+
     fun notificationListenerSettingsIntent(): Intent {
         return Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+    }
+
+    fun usageAccessSettingsIntent(): Intent {
+        return Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
     }
 
     fun exactAlarmSettingsIntent(context: Context): Intent {

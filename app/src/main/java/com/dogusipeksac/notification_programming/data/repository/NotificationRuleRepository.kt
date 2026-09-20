@@ -1,10 +1,11 @@
 package com.dogusipeksac.notification_programming.data.repository
 
+import com.dogusipeksac.notification_programming.data.local.AppLanguage
 import com.dogusipeksac.notification_programming.data.local.DefaultRule
 import com.dogusipeksac.notification_programming.data.local.NotificationRule
-import com.dogusipeksac.notification_programming.data.local.ThemeMode
 import com.dogusipeksac.notification_programming.data.local.NotificationRuleDao
 import com.dogusipeksac.notification_programming.data.local.SettingsDataStore
+import com.dogusipeksac.notification_programming.data.local.ThemeMode
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,6 +25,8 @@ class NotificationRuleRepository @Inject constructor(
 
     fun observeHasSeenIntro(): Flow<Boolean> = settingsDataStore.hasSeenIntro
 
+    fun observeAppLanguage(): Flow<AppLanguage> = settingsDataStore.appLanguage
+
     fun observeRule(packageName: String): Flow<NotificationRule?> = dao.observeByPackage(packageName)
 
     suspend fun getAllRules(): List<NotificationRule> = dao.getAll()
@@ -33,6 +36,8 @@ class NotificationRuleRepository @Inject constructor(
     suspend fun getDefaultRule(): DefaultRule = settingsDataStore.getDefaultRule()
 
     suspend fun getWeekendOff(): Boolean = settingsDataStore.getWeekendOff()
+
+    suspend fun getAppLanguage(): AppLanguage = settingsDataStore.getAppLanguage()
 
     suspend fun upsertRule(rule: NotificationRule) = dao.upsert(rule)
 
@@ -45,6 +50,8 @@ class NotificationRuleRepository @Inject constructor(
     suspend fun setWeekendOff(enabled: Boolean) = settingsDataStore.setWeekendOff(enabled)
 
     suspend fun setHasSeenIntro(seen: Boolean) = settingsDataStore.setHasSeenIntro(seen)
+
+    suspend fun setAppLanguage(language: AppLanguage) = settingsDataStore.setAppLanguage(language)
 
     suspend fun getHasSeenIntro(): Boolean = settingsDataStore.getHasSeenIntro()
 }

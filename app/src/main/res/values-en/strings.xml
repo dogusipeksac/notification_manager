@@ -1,0 +1,222 @@
+<resources>
+    <string name="app_name">Notification Scheduler</string>
+    <string name="delayed_channel_name">Delayed notifications</string>
+    <string name="delayed_channel_description">Notifications shown after quiet hours end</string>
+    <string name="onboarding_title">You're in control</string>
+    <string name="onboarding_body">Calm the chaotic notification stream.</string>
+    <string name="open_notification_access">Grant notification access</string>
+    <string name="onboarding_settings_hint">In system settings, enable this app from the list.</string>
+    <string name="grant_post_notifications">Allow posting notifications</string>
+    <string name="permission_granted">Notification access granted</string>
+    <string name="permission_not_granted">Notification access not granted yet</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_start">Get started</string>
+    <string name="onboarding_continue_home">Continue to app</string>
+    <string name="onboarding_page1_title">Manage your notifications</string>
+    <string name="onboarding_page1_body">Notification Scheduler blocks or delays notifications from apps you choose during quiet hours so you can stay focused.</string>
+    <string name="onboarding_page2_title">Pick the apps you want</string>
+    <string name="onboarding_page2_body">You won't see every app at once. Use + to add only the apps you want to manage.</string>
+    <string name="onboarding_page3_title">Set quiet hours</string>
+    <string name="onboarding_page3_body">Choose start and end times per app. Block notifications entirely, or show them again with the same content when quiet hours end.</string>
+    <string name="onboarding_page4_title">Weekend off</string>
+    <string name="onboarding_page4_body">Optionally block selected apps' notifications on Saturday and Sunday. Weekday rules stay the same.</string>
+    <string name="onboarding_page5_title">Last step: grant access</string>
+    <string name="onboarding_page5_body">Notification access is required to manage alerts. When Settings opens, enable Notification Scheduler.</string>
+    <string name="onboarding_step1_title">Define quiet hours</string>
+    <string name="onboarding_step1_body">Set a night window for any app; notifications pause during that time.</string>
+    <string name="onboarding_step2_title">Notifications can wait</string>
+    <string name="onboarding_step2_body">Delayed alerts wait in the hourglass; content is not lost.</string>
+    <string name="onboarding_step3_title">Shown again on time</string>
+    <string name="onboarding_step3_body">When quiet hours end, the notification returns with the same text.</string>
+    <string name="home_title">Apps</string>
+    <string name="settings">Settings</string>
+    <string name="search_apps">Search apps</string>
+    <string name="no_apps">No apps added yet</string>
+    <string name="no_apps_hint">Choose the apps whose notifications you want to manage.</string>
+    <string name="add_apps">Add apps</string>
+    <string name="add_apps_title">Select apps</string>
+    <string name="add_apps_subtitle">Tap an app to add it to your list.</string>
+    <string name="app_added">Added</string>
+    <string name="filter_user_apps">User apps</string>
+    <string name="filter_all_apps">All</string>
+    <string name="managed_app_count">%1$d apps</string>
+    <string name="app_count">%1$d / %2$d apps</string>
+    <string name="hours_none">No hours</string>
+    <string name="hours_custom">%1$s</string>
+    <string name="hours_default">%1$s · default</string>
+    <string name="customize_hours">Customize hours</string>
+    <string name="badge_custom">Custom rule</string>
+    <string name="badge_default">Default</string>
+    <string name="app_rule">App rule</string>
+    <string name="back">Back</string>
+    <string name="per_app_hours_hint">Quiet hours for this app.</string>
+    <string name="rule_active_for_app">Quiet hours active for this app</string>
+    <string name="start_label">Start</string>
+    <string name="end_label">End</string>
+    <string name="overnight_hint">Overnight window (e.g. 22:00–08:00).</string>
+    <string name="rule_enabled">Rule active</string>
+    <string name="quiet_hours">Quiet hours</string>
+    <string name="start_time">Start: %1$s</string>
+    <string name="end_time">End: %1$s</string>
+    <string name="action">Action</string>
+    <string name="action_block">Block</string>
+    <string name="action_delay">Delay and show</string>
+    <string name="action_block_desc">Notifications are removed during quiet hours.</string>
+    <string name="action_delay_desc">Notifications are saved and shown again when the window ends.</string>
+    <string name="save_rule">Save</string>
+    <string name="reset_to_default">Reset to default</string>
+    <string name="rule_saved">Rule saved</string>
+    <string name="rule_reset">Custom rule removed</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="default_rule_section">Default rule</string>
+    <string name="default_rule_section_hint">Default quiet hours applied to newly added apps.</string>
+    <string name="default_hours_summary">%1$s – %2$s</string>
+    <string name="edit_default_rule">Edit default rule</string>
+    <string name="default_rule_saved">Default rule saved</string>
+    <string name="permissions_section">Permissions</string>
+    <string name="perm_listener">Notification access</string>
+    <string name="perm_listener_connected">Listener service connected</string>
+    <string name="perm_post_notifications">Post notifications</string>
+    <string name="perm_exact_alarm">Exact alarms</string>
+    <string name="perm_battery">Battery optimization</string>
+    <string name="perm_usage_access">Usage access</string>
+    <string name="usage_access_banner_title">See today's usage</string>
+    <string name="usage_access_banner_body">Grant usage access to see how long selected apps were used today.</string>
+    <string name="usage_access_grant">Grant</string>
+    <string name="usage_today">Today %1$s</string>
+    <string name="usage_today_none">Not used today</string>
+    <string name="fix">Fix</string>
+    <string name="rebind_listener">Rebind</string>
+    <string name="status_granted">✓ granted</string>
+    <string name="status_needed">! needed</string>
+    <string name="status_ok">OK</string>
+    <string name="status_missing">Missing</string>
+    <string name="appearance_section">Appearance</string>
+    <string name="language_section">Language</string>
+    <string name="language_label">App language</string>
+    <string name="language_hint">Default: device language</string>
+    <string name="language_system">System</string>
+    <string name="language_turkish">Türkçe</string>
+    <string name="language_english">English</string>
+    <string name="theme_label">Theme</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="weekend_off_title">Weekend off</string>
+    <string name="weekend_off_subtitle">On Saturday and Sunday, notifications from selected apps are blocked.</string>
+    <string name="usage_fmt_hours_minutes">%1$d h %2$d min</string>
+    <string name="usage_fmt_hours">%1$d h</string>
+    <string name="usage_fmt_minutes">%1$d min</string>
+    <string name="usage_fmt_zero">0 min</string>
+    <string name="about_section">About</string>
+    <string name="about">About</string>
+    <string name="about_open">About the app</string>
+    <string name="about_tagline">Manage your notifications.</string>
+    <string name="version_label">Version %1$s (%2$d)</string>
+    <string name="developer_section">Developer</string>
+    <string name="developer_name">Doğuş İpeksaç</string>
+    <string name="developer_role">Independent developer</string>
+    <string name="contact_email">ipeksac.dogus.19@gmail.com</string>
+    <string name="contact_website">Website</string>
+    <string name="website_url">https://dogusipeksac.com</string>
+    <string name="website_label">dogusipeksac.com</string>
+    <string name="legal_section">Legal</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="kvkk_title">KVKK Notice</string>
+    <string name="terms_of_use">Terms of Use</string>
+    <string name="open_source_licenses">Open source licenses</string>
+    <string name="copyright_line">© %1$d Doğuş İpeksaç. All rights reserved.</string>
+    <string name="privacy_body">Last updated: 20 September 2026
+
+1. Introduction
+Notification Scheduler (“App”) blocks or delays device notifications according to quiet hours you set. This Privacy Policy explains how data is handled.
+
+2. Data controller
+Independent developer Doğuş İpeksaç. Contact: ipeksac.dogus.19@gmail.com
+
+3. Data processed
+Processed locally on your device: quiet-hour rules, preferences (theme, weekend off, language), temporarily delayed notification content, and permission states. No account, cloud sync, ads, or tracking SDKs.
+
+4. Purposes
+Enforce your rules, reschedule delayed notifications, remember preferences, and keep the App reliable.
+
+5. Sharing
+Data is not sent to external servers or sold. Disclosure may occur only if legally required.
+
+6. Retention
+Rules/preferences until you delete them or uninstall. Delayed notification records until shown or no longer needed.
+
+7. Permissions
+May request notification access, posting notifications, exact alarms, battery optimization exemption, installed-app list, and usage access.
+
+8. Your choices
+Revoke permissions, clear app data, or uninstall anytime.
+
+9. Changes
+This policy may be updated in the App.
+
+10. Contact
+ipeksac.dogus.19@gmail.com</string>
+    <string name="kvkk_body">Last updated: 20 September 2026
+
+Notice under Türkiye’s Personal Data Protection Law (KVKK No. 6698):
+
+1. Controller
+Doğuş İpeksaç — ipeksac.dogus.19@gmail.com
+
+2. Data
+Local preferences, rules, optional delayed notification content, package names, permission status. Contact email content only if you write to us. Stored on device; not uploaded to our servers.
+
+3. Legal bases
+Performance of the service (KVKK Art. 5/2-c) and legitimate interest for reliable operation (Art. 5/2-f).
+
+4. Transfers
+Not sold or shared for advertising. May be disclosed to authorities if legally required.
+
+5. Retention
+As long as needed for the purpose; removed on uninstall/data clear.
+
+6. Rights (Art. 11)
+You may request access, correction, deletion, and other KVKK rights by emailing ipeksac.dogus.19@gmail.com.
+
+7. Updates
+This notice may be updated in the App.</string>
+    <string name="terms_body">Last updated: 20 September 2026
+
+By using Notification Scheduler (“App”) you accept these Terms.
+
+1. Service
+The App may block or delay notifications for apps you select during quiet hours. It runs locally on your device.
+
+2. Acceptable use
+Use only lawfully on your own device.
+
+3. Permissions
+Features depend on system permissions and OEM settings. The developer is not liable if permissions are denied or restricted.
+
+4. Notification content
+Delay mode temporarily stores content; block mode may remove notifications during quiet hours.
+
+5. Disclaimer
+Provided “as is” without warranty of uninterrupted operation.
+
+6. Limitation
+To the extent allowed by law, the developer is not liable for indirect damages including missed notifications.
+
+7. IP
+App name, UI, logo and code are protected.
+
+8. Third-party apps
+Their own policies apply.
+
+9. Changes
+Continued use means acceptance of updates. Uninstall anytime.
+
+10. Law
+Laws of the Republic of Türkiye apply; mandatory consumer rights reserved.
+
+11. Contact
+Doğuş İpeksaç — ipeksac.dogus.19@gmail.com</string>
+</resources>

@@ -18,8 +18,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Apps
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Timelapse
 import androidx.compose.material.icons.outlined.Weekend
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -34,6 +36,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -41,15 +44,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dogusipeksac.notification_programming.R
 import com.dogusipeksac.notification_programming.ui.components.AppIcon
 import com.dogusipeksac.notification_programming.ui.components.BrandAtmosphere
 import com.dogusipeksac.notification_programming.ui.components.QuietHoursPill
+import com.dogusipeksac.notification_programming.ui.permissions.PermissionChecker
+import com.dogusipeksac.notification_programming.ui.theme.OrangeAccent
 import com.dogusipeksac.notification_programming.ui.theme.PurpleMid
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,6 +68,12 @@ fun HomeScreen(
     onAddApps: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    LifecycleResumeEffect(Unit) {
+        viewModel.refreshUsage()
+        onPauseOrDispose { }
+    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -105,6 +118,14 @@ fun HomeScreen(
                     onToggle = viewModel::onWeekendOffChange,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
                 )
+                if (state.totalCount > 0 && !state.usageAccessGranted) {
+                    UsageAccessBanner(
+                        onGrant = {
+                            context.startActivity(PermissionChecker.usageAccessSettingsIntent())
+                        },
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+                    )
+                }
                 if (state.totalCount > 0) {
                     OutlinedTextField(
                         value = state.query,
@@ -155,6 +176,45 @@ fun HomeScreen(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun UsageAccessBanner(
+    onGrant: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        shape = MaterialTheme.shapes.large
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Timelapse,
+                contentDescription = null,
+                tint = OrangeAccent
+            )
+            Spacer(Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = stringResource(R.string.usage_access_banner_title),
+                    style = MaterialTheme.typography.titleSmall
+                )
+                Text(
+                    text = stringResource(R.string.usage_access_banner_body),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            TextButton(onClick = onGrant) {
+                Text(stringResource(R.string.usage_access_grant))
             }
         }
     }
@@ -243,6 +303,27 @@ private fun AppRowCard(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                if (row.usageLabel != null) {
+                    Spacer(Modifier.height(4.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Outlined.Schedule,
+                            contentDescription = null,
+                            modifier = Modifier.size(14.dp),
+                            tint = OrangeAccent
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            text = if (row.usageLabel == stringResource(R.string.usage_fmt_zero)) {
+                                stringResource(R.string.usage_today_none)
+                            } else {
+                                stringResource(R.string.usage_today, row.usageLabel)
+                            },
+                            style = MaterialTheme.typography.labelMedium,
+                            color = OrangeAccent
+                        )
+                    }
+                }
                 if (row.enabled && row.quietHoursLabel != null) {
                     Spacer(Modifier.height(6.dp))
                     QuietHoursPill(

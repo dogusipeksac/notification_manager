@@ -2,10 +2,12 @@ package com.dogusipeksac.notification_programming.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dogusipeksac.notification_programming.data.local.AppLanguage
 import com.dogusipeksac.notification_programming.data.local.DefaultRule
 import com.dogusipeksac.notification_programming.data.local.NotificationAction
 import com.dogusipeksac.notification_programming.data.repository.NotificationRuleRepository
 import com.dogusipeksac.notification_programming.service.ListenerConnectionState
+import com.dogusipeksac.notification_programming.ui.locale.LocaleHelper
 import com.dogusipeksac.notification_programming.ui.permissions.PermissionSnapshot
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +21,7 @@ import javax.inject.Inject
 data class SettingsUiState(
     val defaultRule: DefaultRule = DefaultRule(),
     val weekendOff: Boolean = false,
+    val appLanguage: AppLanguage = AppLanguage.SYSTEM,
     val permissions: PermissionSnapshot? = null
 )
 
@@ -33,12 +36,14 @@ class SettingsViewModel @Inject constructor(
     val uiState: StateFlow<SettingsUiState> = combine(
         ruleRepository.observeDefaultRule(),
         ruleRepository.observeWeekendOff(),
+        ruleRepository.observeAppLanguage(),
         permissions,
         listenerConnectionState.connected
-    ) { defaultRule, weekendOff, perms, connected ->
+    ) { defaultRule, weekendOff, language, perms, connected ->
         SettingsUiState(
             defaultRule = defaultRule,
             weekendOff = weekendOff,
+            appLanguage = language,
             permissions = perms?.copy(listenerConnected = connected)
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SettingsUiState())
@@ -49,6 +54,13 @@ class SettingsViewModel @Inject constructor(
 
     fun onWeekendOffChange(enabled: Boolean) {
         viewModelScope.launch { ruleRepository.setWeekendOff(enabled) }
+    }
+
+    fun onLanguageChange(language: AppLanguage) {
+        viewModelScope.launch {
+            ruleRepository.setAppLanguage(language)
+            LocaleHelper.apply(language)
+        }
     }
 
     fun onDefaultEnabledChange(enabled: Boolean) {

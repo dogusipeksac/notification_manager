@@ -41,11 +41,20 @@ class SettingsDataStore @Inject constructor(
         prefs[Keys.HAS_SEEN_INTRO] ?: false
     }
 
+    val appLanguage: Flow<AppLanguage> = dataStore.data.map { prefs ->
+        prefs[Keys.LANGUAGE]?.let { runCatching { AppLanguage.valueOf(it) }.getOrNull() }
+            ?: AppLanguage.SYSTEM
+    }
+
     suspend fun getDefaultRule(): DefaultRule = dataStore.data.first().toDefaultRule()
 
     suspend fun getWeekendOff(): Boolean = dataStore.data.first()[Keys.WEEKEND_OFF] ?: false
 
     suspend fun getHasSeenIntro(): Boolean = dataStore.data.first()[Keys.HAS_SEEN_INTRO] ?: false
+
+    suspend fun getAppLanguage(): AppLanguage =
+        dataStore.data.first()[Keys.LANGUAGE]?.let { runCatching { AppLanguage.valueOf(it) }.getOrNull() }
+            ?: AppLanguage.SYSTEM
 
     suspend fun getThemeMode(): ThemeMode =
         dataStore.data.first()[Keys.THEME]?.let { runCatching { ThemeMode.valueOf(it) }.getOrNull() }
@@ -72,6 +81,10 @@ class SettingsDataStore @Inject constructor(
         dataStore.edit { prefs -> prefs[Keys.HAS_SEEN_INTRO] = seen }
     }
 
+    suspend fun setAppLanguage(language: AppLanguage) {
+        dataStore.edit { prefs -> prefs[Keys.LANGUAGE] = language.name }
+    }
+
     private fun Preferences.toDefaultRule(): DefaultRule {
         val fallback = DefaultRule()
         return DefaultRule(
@@ -91,5 +104,6 @@ class SettingsDataStore @Inject constructor(
         val THEME = stringPreferencesKey("theme_mode")
         val WEEKEND_OFF = booleanPreferencesKey("weekend_off")
         val HAS_SEEN_INTRO = booleanPreferencesKey("has_seen_intro")
+        val LANGUAGE = stringPreferencesKey("app_language")
     }
 }

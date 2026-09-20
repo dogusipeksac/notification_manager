@@ -12,6 +12,10 @@
     <!-- Doze whitelist isteği. -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Kullanım süresi (bugün) göstermek için. -->
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
     <!-- Yüklü uygulama listesi (Android 11+). -->
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"

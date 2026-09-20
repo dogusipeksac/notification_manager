@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.Weekend
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material3.Card
@@ -30,6 +31,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -49,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dogusipeksac.notification_programming.R
+import com.dogusipeksac.notification_programming.data.local.AppLanguage
 import com.dogusipeksac.notification_programming.domain.QuietHoursEvaluator
 import com.dogusipeksac.notification_programming.ui.components.ActionSegmentedButtons
 import com.dogusipeksac.notification_programming.ui.components.BrandAtmosphere
@@ -115,6 +120,45 @@ fun SettingsScreen(
                     .padding(horizontal = 16.dp)
                     .verticalScroll(rememberScrollState())
             ) {
+                Text(
+                    stringResource(R.string.language_section),
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(Modifier.height(10.dp))
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                    shape = MaterialTheme.shapes.large
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Outlined.Language,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(Modifier.width(12.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    stringResource(R.string.language_label),
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+                                Text(
+                                    stringResource(R.string.language_hint),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                        Spacer(Modifier.height(12.dp))
+                        LanguageSelector(
+                            selected = state.appLanguage,
+                            onSelected = viewModel::onLanguageChange
+                        )
+                    }
+                }
+                Spacer(Modifier.height(24.dp))
                 Text(
                     stringResource(R.string.weekend_off_title),
                     style = MaterialTheme.typography.titleMedium
@@ -285,6 +329,13 @@ fun SettingsScreen(
                                 context.startActivity(PermissionChecker.ignoreBatteryOptimizationsIntent(context))
                             }
                         )
+                        PermissionRow(
+                            title = stringResource(R.string.perm_usage_access),
+                            granted = perms?.usageAccessGranted == true,
+                            onClick = {
+                                context.startActivity(PermissionChecker.usageAccessSettingsIntent())
+                            }
+                        )
                     }
                 }
                 Spacer(Modifier.height(24.dp))
@@ -355,6 +406,32 @@ fun SettingsScreen(
             },
             onDismiss = { pickingEnd = false }
         )
+    }
+}
+
+@Composable
+private fun LanguageSelector(
+    selected: AppLanguage,
+    onSelected: (AppLanguage) -> Unit
+) {
+    val modes = AppLanguage.entries
+    SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+        modes.forEachIndexed { index, mode ->
+            SegmentedButton(
+                selected = selected == mode,
+                onClick = { onSelected(mode) },
+                shape = SegmentedButtonDefaults.itemShape(index, modes.size)
+            ) {
+                Text(
+                    text = when (mode) {
+                        AppLanguage.SYSTEM -> stringResource(R.string.language_system)
+                        AppLanguage.TURKISH -> stringResource(R.string.language_turkish)
+                        AppLanguage.ENGLISH -> stringResource(R.string.language_english)
+                    },
+                    maxLines = 1
+                )
+            }
+        }
     }
 }
 

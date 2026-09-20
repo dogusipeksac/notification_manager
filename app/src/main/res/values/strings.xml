@@ -91,6 +91,12 @@
     <string name="perm_post_notifications">Bildirim gönderme</string>
     <string name="perm_exact_alarm">Tam zamanlı alarm</string>
     <string name="perm_battery">Pil optimizasyonu</string>
+    <string name="perm_usage_access">Kullanım erişimi</string>
+    <string name="usage_access_banner_title">Bugünkü kullanımı gör</string>
+    <string name="usage_access_banner_body">Seçili uygulamaların bugün ne kadar kullanıldığını görmek için kullanım erişimi ver.</string>
+    <string name="usage_access_grant">İzin ver</string>
+    <string name="usage_today">Bugün %1$s</string>
+    <string name="usage_today_none">Bugün kullanılmadı</string>
     <string name="fix">Düzelt</string>
     <string name="rebind_listener">Yeniden bağla</string>
     <string name="status_granted">✓ verildi</string>
@@ -99,12 +105,23 @@
     <string name="status_missing">Eksik</string>
 
     <string name="appearance_section">Görünüm</string>
+    <string name="language_section">Dil</string>
+    <string name="language_label">Uygulama dili</string>
+    <string name="language_hint">Varsayılan: cihaz dili</string>
+    <string name="language_system">Sistem</string>
+    <string name="language_turkish">Türkçe</string>
+    <string name="language_english">English</string>
     <string name="theme_label">Tema</string>
     <string name="theme_system">Sistem</string>
     <string name="theme_light">Açık</string>
     <string name="theme_dark">Koyu</string>
     <string name="weekend_off_title">Hafta sonu kapat</string>
     <string name="weekend_off_subtitle">Cumartesi ve Pazar seçili uygulamaların bildirimleri gelmez.</string>
+
+    <string name="usage_fmt_hours_minutes">%1$d sa %2$d dk</string>
+    <string name="usage_fmt_hours">%1$d sa</string>
+    <string name="usage_fmt_minutes">%1$d dk</string>
+    <string name="usage_fmt_zero">0 dk</string>
 
     <string name="about_section">Hakkında</string>
     <string name="about">Hakkında</string>
