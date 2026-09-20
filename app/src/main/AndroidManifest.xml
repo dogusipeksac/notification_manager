@@ -37,13 +37,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Notification_programming">
+        android:localeConfig="@xml/locales_config"
+        android:theme="@style/Theme.NotificationScheduler">
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Notification_programming"
+            android:theme="@style/Theme.NotificationScheduler"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

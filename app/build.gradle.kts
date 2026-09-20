@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace = "com.dogusipeksac.notification_programming"
+    namespace = "com.dogusipeksac.notificationscheduler"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.dogusipeksac.notification_programming"
+        applicationId = "com.dogusipeksac.notificationscheduler"
         minSdk = 24
         targetSdk = 37
         versionCode = 1

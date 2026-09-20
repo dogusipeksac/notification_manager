@@ -2,7 +2,7 @@
     <string name="app_name">Notification Scheduler</string>
     <string name="delayed_channel_name">Delayed notifications</string>
     <string name="delayed_channel_description">Notifications shown after quiet hours end</string>
-    <string name="onboarding_title">You're in control</string>
+    <string name="onboarding_title">You\'re in control</string>
     <string name="onboarding_body">Calm the chaotic notification stream.</string>
     <string name="open_notification_access">Grant notification access</string>
     <string name="onboarding_settings_hint">In system settings, enable this app from the list.</string>
@@ -16,11 +16,11 @@
     <string name="onboarding_page1_title">Manage your notifications</string>
     <string name="onboarding_page1_body">Notification Scheduler blocks or delays notifications from apps you choose during quiet hours so you can stay focused.</string>
     <string name="onboarding_page2_title">Pick the apps you want</string>
-    <string name="onboarding_page2_body">You won't see every app at once. Use + to add only the apps you want to manage.</string>
+    <string name="onboarding_page2_body">You won\'t see every app at once. Use + to add only the apps you want to manage.</string>
     <string name="onboarding_page3_title">Set quiet hours</string>
     <string name="onboarding_page3_body">Choose start and end times per app. Block notifications entirely, or show them again with the same content when quiet hours end.</string>
     <string name="onboarding_page4_title">Weekend off</string>
-    <string name="onboarding_page4_body">Optionally block selected apps' notifications on Saturday and Sunday. Weekday rules stay the same.</string>
+    <string name="onboarding_page4_body">Optionally block selected apps\' notifications on Saturday and Sunday. Weekday rules stay the same.</string>
     <string name="onboarding_page5_title">Last step: grant access</string>
     <string name="onboarding_page5_body">Notification access is required to manage alerts. When Settings opens, enable Notification Scheduler.</string>
     <string name="onboarding_step1_title">Define quiet hours</string>
@@ -82,7 +82,7 @@
     <string name="perm_exact_alarm">Exact alarms</string>
     <string name="perm_battery">Battery optimization</string>
     <string name="perm_usage_access">Usage access</string>
-    <string name="usage_access_banner_title">See today's usage</string>
+    <string name="usage_access_banner_title">See today\'s usage</string>
     <string name="usage_access_banner_body">Grant usage access to see how long selected apps were used today.</string>
     <string name="usage_access_grant">Grant</string>
     <string name="usage_today">Today %1$s</string>
